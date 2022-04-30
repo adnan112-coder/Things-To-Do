@@ -5,9 +5,10 @@ function ItemList({ id, text, onCheck, completed, onDelete }) {
     <div className="items">
       <div className="left">
         <input
-          className="checkbox"
+          className="checkbox3"
           type="checkbox"
           onClick={() => onCheck(id)}
+          checked={completed}
         />
         <p
           onClick={() => onCheck(id)}
@@ -23,7 +24,8 @@ function ItemList({ id, text, onCheck, completed, onDelete }) {
       <button
         className="delete"
         onClick={() => {
-          onDelete(id);
+          const item = { id, completed, title: text };
+          onDelete(item);
         }}
       >
         x

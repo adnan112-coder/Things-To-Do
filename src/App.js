@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import Input from "./Components/Input.jsx";
 import ItemList from "./Components/ItemList";
+import Modal from "./Components/Modal";
 import { nanoid } from "nanoid";
 
 function App() {
   const [items, setItems] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -30,12 +33,17 @@ function App() {
     });
   }
 
-  function deleteItem(id) {
+  function deleteItem(item) {
     setItems((prevItems) => {
-      return prevItems.filter((item) => {
-        return item.id !== id;
+      return prevItems.filter((todo) => {
+        return todo.id !== item.id;
       });
     });
+  }
+
+  function handleDeleteItem(item) {
+    if (item.completed) deleteItem(item);
+    else setShowModal(item);
   }
 
   function getCompletedItemLength() {
@@ -64,7 +72,7 @@ function App() {
             id={item.id}
             text={item.title}
             onCheck={checkItem}
-            onDelete={deleteItem}
+            onDelete={handleDeleteItem}
             completed={item.completed}
           />
         ))}
@@ -72,6 +80,13 @@ function App() {
       <hr />
       <h3>DONE:{getCompletedItemLength()}</h3>
       <Input onAdd={addItem} />
+      {showModal && (
+        <Modal
+          deleteItem={deleteItem}
+          setShowModal={setShowModal}
+          item={showModal}
+        />
+      )}
     </div>
   );
 }
